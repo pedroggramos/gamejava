@@ -1,87 +1,77 @@
 package view;
 
 import java.awt.event.ActionEvent;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import model.Pergunta;
+import java.util.function.Consumer;
 
 public class PerguntaFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private final JLabel lblPerguntaN = new JLabel("Pergunta N° ?");
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
 
-	public PerguntaFrame() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 206);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+    public PerguntaFrame(Pergunta pergunta, Consumer<Boolean> callback) {
+        setTitle("Pergunta");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 500, 240);
+        setResizable(false);
 
-		JLabel lblNewLabel = new JLabel("...............Pergunta.................");
-		lblNewLabel.setBounds(151, 10, 200, 13);
-		contentPane.add(lblNewLabel);
-		lblPerguntaN.setBounds(10, 0, 82, 13);
-		contentPane.add(lblPerguntaN);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        contentPane.setLayout(null);
+        setContentPane(contentPane);
 
-		JRadioButton opcaoA = new JRadioButton("A) Resposta A");
-		opcaoA.setBounds(10, 71, 150, 21);
-		contentPane.add(opcaoA);
+        JLabel lblPergunta = new JLabel("<html>" + pergunta.getPergunta() + "</html>");
+        lblPergunta.setBounds(10, 10, 460, 40);
+        contentPane.add(lblPergunta);
 
-		JRadioButton opcaoB = new JRadioButton("B) Resposta B");
-		opcaoB.setBounds(10, 110, 150, 21);
-		contentPane.add(opcaoB);
+        JRadioButton opcaoA = new JRadioButton("A) " + pergunta.getAlt_a());
+        JRadioButton opcaoB = new JRadioButton("B) " + pergunta.getAlt_b());
+        JRadioButton opcaoC = new JRadioButton("C) " + pergunta.getAlt_c());
+        JRadioButton opcaoD = new JRadioButton("D) " + pergunta.getAlt_d());
 
-		JRadioButton opcaoC = new JRadioButton("C) Resposta C");
-		opcaoC.setBounds(250, 71, 150, 21);
-		contentPane.add(opcaoC);
+        opcaoA.setBounds(10, 60, 460, 21);
+        opcaoB.setBounds(10, 90, 460, 21);
+        opcaoC.setBounds(10, 120, 460, 21);
+        opcaoD.setBounds(10, 150, 460, 21);
 
-		JRadioButton opcaoD = new JRadioButton("D) Resposta D");
-		opcaoD.setBounds(250, 110, 150, 21);
-		contentPane.add(opcaoD);
+        contentPane.add(opcaoA);
+        contentPane.add(opcaoB);
+        contentPane.add(opcaoC);
+        contentPane.add(opcaoD);
 
-		ButtonGroup grupo = new ButtonGroup();
-		grupo.add(opcaoA);
-		grupo.add(opcaoB);
-		grupo.add(opcaoC);
-		grupo.add(opcaoD);
+        ButtonGroup grupo = new ButtonGroup();
+        grupo.add(opcaoA);
+        grupo.add(opcaoB);
+        grupo.add(opcaoC);
+        grupo.add(opcaoD);
 
-		JButton respostaBtn = new JButton("Responder");
-		respostaBtn.setBounds(151, 138, 126, 21);
-		contentPane.add(respostaBtn);
+        JButton respostaBtn = new JButton("Responder");
+        respostaBtn.setBounds(180, 180, 120, 25);
+        contentPane.add(respostaBtn);
 
-		respostaBtn.addActionListener((ActionEvent e) -> {
-			String respostaSelecionada = "";
+        respostaBtn.addActionListener((ActionEvent e) -> {
+            String respostaSelecionada = "";
 
-			if (opcaoA.isSelected()) respostaSelecionada = "A";
-			else if (opcaoB.isSelected()) respostaSelecionada = "B";
-			else if (opcaoC.isSelected()) respostaSelecionada = "C";
-			else if (opcaoD.isSelected()) respostaSelecionada = "D";
+            if (opcaoA.isSelected()) respostaSelecionada = "A";
+            else if (opcaoB.isSelected()) respostaSelecionada = "B";
+            else if (opcaoC.isSelected()) respostaSelecionada = "C";
+            else if (opcaoD.isSelected()) respostaSelecionada = "D";
 
-			if (respostaSelecionada.isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Você precisa selecionar uma alternativa!");
-				return;
-			}
+            if (respostaSelecionada.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Você precisa selecionar uma alternativa!");
+                return;
+            }
 
-			String respostaCorreta = "C";
+            boolean acertou = respostaSelecionada.equalsIgnoreCase(pergunta.getResposta_correta());
 
-			if (respostaSelecionada.equals(respostaCorreta)) {
-				JOptionPane.showMessageDialog(null, "✅ Resposta Correta! Parabéns");
-				dispose();
+            JOptionPane.showMessageDialog(this,
+                    acertou ? "✅ Resposta Correta!" : "❌ Você errou!");
 
-			} else {
-				JOptionPane.showMessageDialog(null, "❌ Você errou!");
-				dispose();
-			}
-		});
-	}
-	
-
+            dispose();
+            callback.accept(acertou);
+        });
+    }
 }

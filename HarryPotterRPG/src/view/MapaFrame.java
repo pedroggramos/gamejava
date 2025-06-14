@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,6 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import dao.daoPergunta;
+import model.Pergunta;
 
 public class MapaFrame extends JFrame {
 
@@ -32,6 +37,8 @@ public class MapaFrame extends JFrame {
     private int faseAtual = 1;
     private int caixasCompletadasNaFase = 0;
     private JLabel labelFaseAtual;
+    private int[] pontuacaoPorJogador;  // Pontuação por casa
+
 
     public MapaFrame(List<String> casasSelecionadas) {
         if (casasSelecionadas == null || casasSelecionadas.isEmpty()) {
@@ -44,6 +51,8 @@ public class MapaFrame extends JFrame {
         adicionarBrasoesJogadores();
         adicionarBotoes();
         atualizarBrasoes();
+        this.pontuacaoPorJogador = new int[casasSelecionadas.size()];
+
     }
 
     private void configurarJanela() {
@@ -109,14 +118,18 @@ public class MapaFrame extends JFrame {
         layeredPane.add(btnVoltar, Integer.valueOf(2));
 
         // Cria as fases no mapa com 3 quadradinhos cada, em posições diferentes
-        criarFase(1, 50, 280);
-        criarFase(2, 360, 250);
-        criarFase(3, 520, 150);
-        criarFase(4, 800, 160);
-        criarFase(5, 800, 340);
-        criarFase(6, 260, 520);
+        criarFase(1,50,390);
+        criarFase(2, 70, 120);
+        criarFase(3, 360, 250);
+        criarFase(4, 520, 150);
+        criarFase(5, 800, 160);
+        criarFase(6, 800, 340);
+        //criarFase(7, 260, 520);
         criarFase(7, 800, 520);
+        //criarFase(8, 800, 520);
         criarFase(8, 600, 480);
+        //criarFase(9, 600, 480);
+        criarFase(9, 260, 520);
     }
 
     private void colocarBrasaoNoPainel(JPanel painel, int jogador) {
@@ -188,13 +201,25 @@ public class MapaFrame extends JFrame {
     private void criarFase(int numeroFase, int startX, int startY) {
         int largura = 40, altura = 40, espacamento = 50;
 
+        // Lista com nomes das fases (índice 0 = fase 1, etc)
+        String[] nomesFases = {
+            "Fase 1 – Cabana de Hagrid",
+            "Fase 2 – Hogsmeade",
+            "Fase 3 – Campo de Quadribol",
+            "Fase 4 – West Tower",
+            "Fase 5 – Floresta Proibida",
+            "Fase 6 – Salgueiro Lutador",
+            "Fase 7 – Estação de Trem",
+            "Fase 8 – Castelo de Hogwarts",
+            "Fase 9 – Lago Negro"
+        };
+
         for (int i = 0; i < 3; i++) {
             JPanel painel = new JPanel(null);
-            painel.setBackground(new Color(200, 200, 255, 150)); // fundo esbranquiçado
+            painel.setBackground(new Color(200, 200, 255, 150)); // fundo semi-transparente
             painel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
             painel.setBounds(startX + i * espacamento, startY, largura, altura);
 
-            // Armazenar qual fase esse painel pertence (usando putClientProperty)
             painel.putClientProperty("fase", numeroFase);
 
             painel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -207,53 +232,99 @@ public class MapaFrame extends JFrame {
 
                     int faseDoPainel = (int) painel.getClientProperty("fase");
                     if (faseDoPainel != faseAtual) {
-                        JOptionPane.showMessageDialog(MapaFrame.this, 
-                            "Você só pode jogar a fase atual: " + faseAtual);
+                        JOptionPane.showMessageDialog(MapaFrame.this,
+                                "Você só pode jogar a fase atual: " + faseAtual);
                         return;
                     }
 
-                    // Evita clicar em painel já preenchido (com brasão)
                     if (painel.getComponentCount() > 0) {
-                        JOptionPane.showMessageDialog(MapaFrame.this, 
-                            "Esse quadradinho já foi completado.");
+                        JOptionPane.showMessageDialog(MapaFrame.this,
+                                "Esse quadradinho já foi completado.");
                         return;
                     }
 
-                    boolean acertou = perguntaDoBanco();
+                    perguntaDoBanco(acertou -> {
+                        if (acertou) {
+                            colocarBrasaoNoPainel(painel, jogadorAtual);
+                            caixasCompletadasNaFase++;
+                            pontuacaoPorJogador[jogadorAtual]++;
+                            JOptionPane.showMessageDialog(MapaFrame.this, "Resposta correta! Brasão colocado.");
 
-                    if (acertou) {
-                        colocarBrasaoNoPainel(painel, jogadorAtual);
-                        caixasCompletadasNaFase++;
-                        JOptionPane.showMessageDialog(MapaFrame.this, "Resposta correta! Brasão colocado.");
+                            if (caixasCompletadasNaFase >= 3) {
+                                faseAtual++;
+                                if (faseAtual > 9) {
+                                    mostrarRankingFinal();
+                                    return;
+                                }
 
-                        // Se completou todos da fase (3 caixas), libera próxima fase
-                        if (caixasCompletadasNaFase >= 3) {
-                            faseAtual++;
-                            caixasCompletadasNaFase = 0;
-                            atualizarFaseAtualNaTela();
-                            JOptionPane.showMessageDialog(MapaFrame.this, 
-                                "Fase " + (faseAtual - 1) + " concluída! Próxima fase liberada.");
+                                caixasCompletadasNaFase = 0;
+                                atualizarFaseAtualNaTela();
+                                JOptionPane.showMessageDialog(MapaFrame.this,
+                                        "Fase " + (faseAtual - 1) + " concluída! Próxima fase liberada.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(MapaFrame.this, "Resposta errada! Próximo jogador.");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(MapaFrame.this, "Resposta errada! Próximo jogador.");
-                    }
 
-                    // Passa para o próximo jogador e desativa turno
-                    jogadorAtual = (jogadorAtual + 1) % casasSelecionadas.size();
-                    atualizarBrasoes();
-                    turnoAtivo = false;
+                        jogadorAtual = (jogadorAtual + 1) % casasSelecionadas.size();
+                        atualizarBrasoes();
+                        turnoAtivo = false;
+                    });
                 }
             });
 
             layeredPane.add(painel, Integer.valueOf(2));
             painéisCasas.add(painel);
         }
+
+        // Adiciona a label com o nome da fase abaixo dos quadradinhos
+        JLabel labelFase = new JLabel(nomesFases[numeroFase - 1]);
+        labelFase.setFont(new Font("Arial", Font.BOLD, 12));
+        labelFase.setForeground(Color.WHITE);
+        labelFase.setBounds(startX, startY + 45, 200, 20); // Ajuste Y para aparecer abaixo
+        layeredPane.add(labelFase, Integer.valueOf(3));
+    }
+
+
+    // Método simulado para testar
+    private void perguntaDoBanco(Consumer<Boolean> callback) {
+        daoPergunta dao = new daoPergunta();
+        Pergunta pergunta = dao.buscarPerguntaAleatoria();
+
+        if (pergunta == null) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar pergunta do banco.");
+            callback.accept(false);
+            return;
+        }
+
+        PerguntaFrame perguntaFrame = new PerguntaFrame(pergunta, callback);
+        perguntaFrame.setLocationRelativeTo(this);
+        perguntaFrame.setVisible(true);
     }
     
-    // Método simulado para testar
-    private boolean perguntaDoBanco() {
-        // Aqui você implementa sua lógica real com banco, pergunta, resposta, etc.
-        // Por enquanto retorna aleatório para testar
-        return Math.random() > 0.5;
+    private void mostrarRankingFinal() {
+        // Cria uma lista com pares (casa, pontuação)
+        List<String> ranking = new ArrayList<>();
+        for (int i = 0; i < casasSelecionadas.size(); i++) {
+            ranking.add(casasSelecionadas.get(i) + " - " + pontuacaoPorJogador[i] + " acertos");
+        }
+
+        // Ordena pela pontuação (decrescente)
+        ranking.sort((a, b) -> {
+            int pontosA = Integer.parseInt(a.replaceAll("\\D+", ""));
+            int pontosB = Integer.parseInt(b.replaceAll("\\D+", ""));
+            return Integer.compare(pontosB, pontosA); // Ordem decrescente
+        });
+
+        StringBuilder mensagem = new StringBuilder("🏆 Fim de jogo!\n\nRanking final:\n");
+        for (int i = 0; i < ranking.size(); i++) {
+            mensagem.append((i + 1)).append("º - ").append(ranking.get(i)).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(this, mensagem.toString(), "Ranking Final", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0); // Fecha o jogo após o ranking final
     }
+
+
+
 }
