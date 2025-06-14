@@ -1,73 +1,109 @@
 package view;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 public class MainMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainMenu frame = new MainMenu();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	private Image fundoImagemMenu;
+	
 	public MainMenu() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 925, 500);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setBounds(100, 100, 705, 675); // tamanho igual ao da imagem de fundo
 
+		ImageIcon fundoIcon = new ImageIcon("assets/fundoMenu.jpg");
+		fundoImagemMenu = fundoIcon.getImage().getScaledInstance(782, 782, Image.SCALE_SMOOTH);
+
+		contentPane = new JPanel(null) {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(fundoImagemMenu, 0, 0, this);
+			}
+		};
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("HarryPotter RPG");
-		lblNewLabel.setBounds(199, 40, 130, 13);
-		contentPane.add(lblNewLabel);
-		
-		JButton btnNewButton = new JButton("Jogar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Botão Jogar Apertado");
-//				CharacterSelect tela = new CharacterSelect(); // tela de seleção de personagem
-//				tela.setVisible(true);
-//				dispose(); // fecha a tela atual
-				
 
+		JLabel lblTituloMenu = new JLabel("HARRY POTTER - RPG") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				// sombra preta translúcida
+				g.setColor(new Color(0, 0, 0, 150));
+				g.drawString(getText(), 2, getHeight() / 2 + getFont().getSize() / 2);
+				// texto branco
+				g.setColor(Color.WHITE);
+				g.drawString(getText(), 0, getHeight() / 2 + getFont().getSize() / 2);
 			}
-		});
-		btnNewButton.setBounds(107, 112, 85, 21);
-		contentPane.add(btnNewButton);
+		};
+		lblTituloMenu.setFont(new Font("Arial", Font.BOLD, 24));
+		lblTituloMenu.setHorizontalAlignment(JLabel.CENTER);
+		lblTituloMenu.setBounds(188, 17, 0, 0);
+		contentPane.add(lblTituloMenu);
 		
-		JButton btnNewButton_1 = new JButton("Sair");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		// ComboBox de número de jogadores
+		JLabel lblQtdJogadores = new JLabel("NÚMERO DE BRUXOS");
+		lblQtdJogadores.setBounds(262, 203, 183, 19);
+		lblQtdJogadores.setFont(new Font("Georgia", Font.PLAIN, 16));
+		lblQtdJogadores.setForeground(Color.WHITE);
+		contentPane.add(lblQtdJogadores);
+
+		String[] opcoes = {"1", "2", "3", "4"};
+		JComboBox<String> comboJogadores = new JComboBox<>(opcoes);
+		comboJogadores.setBounds(323, 232, 43, 19);
+		contentPane.add(comboJogadores);
+
+		// Botão Jogar
+		JButton btnJogar = new JButton("JOGAR");
+		btnJogar.setBounds(262, 148, 159, 45);
+		btnJogar.setForeground(new Color(218, 165, 32));
+		btnJogar.setFont(new Font("Georgia", Font.BOLD, 18));
+		btnJogar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+		btnJogar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				int numJogadores = Integer.parseInt((String) comboJogadores.getSelectedItem());
+				CharacterSelect select = new CharacterSelect(numJogadores);
+				select.setVisible(true);
+				dispose();
 			}
 		});
-		btnNewButton_1.setBounds(307, 112, 51, 21);
-		contentPane.add(btnNewButton_1);
+		contentPane.add(btnJogar);
+
+
+		// Botão Sair
+		JButton btnSair = new JButton("Sair");
+		btnSair.setBounds(311, 291, 66, 35);
+		btnSair.setForeground(new Color(218, 165, 32));
+		btnSair.setFont(new Font("Georgia", Font.BOLD, 18));
+		btnSair.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		btnSair.addActionListener(e -> System.exit(0));
+		contentPane.add(btnSair);
+	}
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(() -> {
+			try {
+				MainMenu frame = new MainMenu();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }
+	
