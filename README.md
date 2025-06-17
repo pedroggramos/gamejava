@@ -3,9 +3,8 @@
 📅 Entrega: 17 de junho de 2025
 
 👨‍💻 Desenvolvedores:
-- Pedro Gabriel Guimarães Ramos - Matrícula: [INSIRA AQUI]
-- (adicione mais nomes, se houver)
-
+- Pedro Gabriel Guimarães Ramos
+ 
 ---
 
 🎯 OBJETIVO DO JOGO
