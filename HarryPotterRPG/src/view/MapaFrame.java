@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import dao.daoPergunta;
-import model.Pergunta;
+import dominio.Pergunta;
 
 public class MapaFrame extends JFrame {
     private static final long serialVersionUID = 1L;

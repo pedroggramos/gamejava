@@ -4,7 +4,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import model.Pergunta;
+import dominio.Pergunta;
+
 import java.util.function.Consumer;
 
 public class PerguntaFrame extends JFrame {
