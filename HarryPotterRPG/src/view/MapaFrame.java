@@ -80,8 +80,8 @@ public class MapaFrame extends JFrame {
         labelSorteio = new JLabel(" ");
         labelSorteio.setFont(new Font("Arial", Font.BOLD, 12));
         labelSorteio.setForeground(Color.BLACK);
-        labelSorteio.setOpaque(true); // permite mostrar o fundo
-        labelSorteio.setBackground(new Color(250, 250, 210)); // amarelo claro
+        labelSorteio.setOpaque(true); 
+        labelSorteio.setBackground(new Color(250, 250, 210)); 
         labelSorteio.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         labelSorteio.setBounds(825, 11, 151, 29);
         layeredPane.add(labelSorteio, Integer.valueOf(3));
@@ -111,7 +111,7 @@ public class MapaFrame extends JFrame {
 
         btnComecarTurno.addActionListener(e -> {
             if (!ordemSorteada) {
-                // Timer para animar nomes sorteados
+                
                 javax.swing.Timer animacaoTimer = new javax.swing.Timer(100, null);
                 
                 animacaoTimer.addActionListener(ev -> {
@@ -121,16 +121,16 @@ public class MapaFrame extends JFrame {
 
                 animacaoTimer.start();
 
-                // Timer para parar animação após 3 segundos
+         
                 new javax.swing.Timer(3000, ev -> {
                     animacaoTimer.stop();
 
-                    // Embaralha para ordem definitiva
+                    
                     Collections.shuffle(casasSelecionadas);
                     ordemSorteada = true;
                     jogadorAtual = 0;
 
-                    // Monta a ordem na label e na mensagem
+                    
                     StringBuilder ordem = new StringBuilder("🎲 Ordem dos turnos:\n\n");
                     StringBuilder ordemHTML = new StringBuilder("<html>");
                     for (int i = 0; i < casasSelecionadas.size(); i++) {
@@ -145,7 +145,7 @@ public class MapaFrame extends JFrame {
                     turnoAtivo = true;
                     atualizarBrasoes();
 
-                    ((javax.swing.Timer) ev.getSource()).stop(); // Para o timer do stop
+                    ((javax.swing.Timer) ev.getSource()).stop(); 
                 }).start();
 
             } else {
@@ -181,7 +181,7 @@ public class MapaFrame extends JFrame {
 
         layeredPane.add(btnVoltar, Integer.valueOf(2));
 
-        // Criação das fases
+        
         criarFase(1, 50, 390);
         criarFase(2, 70, 120);
         criarFase(3, 360, 250);
@@ -196,10 +196,10 @@ public class MapaFrame extends JFrame {
 
 
     private void colocarBrasaoNoPainel(JPanel painel, int jogador) {
-        // Remove brasão anterior se houver
+        
         painel.removeAll();
 
-        // Pega o nome da casa do jogador atual e imagem
+        
         String casa = casasSelecionadas.get(jogador);
         String arquivo = getNomeArquivoImagem(casa);
         ImageIcon icon = new ImageIcon("assets/" + arquivo);
@@ -220,10 +220,10 @@ public class MapaFrame extends JFrame {
             Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 
             if (i != jogadorAtual) {
-                // Brasão dos outros jogadores fica com transparência (esbranquiçado)
+           
                 img = aplicarTransparencia(img, 0.3f);
             }
-            // Brasão do jogador atual fica normal (100% opaco)
+           
 
             iconesCasas.get(i).setIcon(new ImageIcon(img));
         }
@@ -259,7 +259,7 @@ public class MapaFrame extends JFrame {
     private void criarFase(int numeroFase, int startX, int startY) {
         int largura = 40, altura = 40, espacamento = 50;
 
-        // Lista com nomes das fases (índice 0 = fase 1, etc)
+        
         String[] nomesFases = {
             "Fase 1 – Cabana de Hagrid",
             "Fase 2 – Hogsmeade",
@@ -274,7 +274,7 @@ public class MapaFrame extends JFrame {
 
         for (int i = 0; i < 3; i++) {
             JPanel painel = new JPanel(null);
-            painel.setBackground(new Color(200, 200, 255, 150)); // fundo semi-transparente
+            painel.setBackground(new Color(200, 200, 255, 150));
             painel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
             painel.setBounds(startX + i * espacamento, startY, largura, altura);
 
@@ -335,7 +335,7 @@ public class MapaFrame extends JFrame {
             painéisCasas.add(painel);
         }
 
-        // Adiciona a label com o nome da fase abaixo dos quadradinhos
+        
         JLabel labelFase = new JLabel(nomesFases[numeroFase - 1]);
         labelFase.setFont(new Font("Arial", Font.BOLD, 12));
         labelFase.setForeground(Color.WHITE);
@@ -344,7 +344,7 @@ public class MapaFrame extends JFrame {
     }
 
 
-    // Método simulado para testar
+    
     private void perguntaDoBanco(Consumer<Boolean> callback) {
         daoPergunta dao = new daoPergunta();
         Pergunta pergunta = dao.buscarPerguntaAleatoria();
@@ -361,17 +361,17 @@ public class MapaFrame extends JFrame {
     }
     
     private void mostrarRankingFinal() {
-        // Cria uma lista com pares (casa, pontuação)
+       
         List<String> ranking = new ArrayList<>();
         for (int i = 0; i < casasSelecionadas.size(); i++) {
             ranking.add(casasSelecionadas.get(i) + " - " + pontuacaoPorJogador[i] + " acertos");
         }
 
-        // Ordena pela pontuação (decrescente)
+   
         ranking.sort((a, b) -> {
             int pontosA = Integer.parseInt(a.replaceAll("\\D+", ""));
             int pontosB = Integer.parseInt(b.replaceAll("\\D+", ""));
-            return Integer.compare(pontosB, pontosA); // Ordem decrescente
+            return Integer.compare(pontosB, pontosA);
         });
 
         StringBuilder mensagem = new StringBuilder("🏆 Fim de jogo!\n\nRanking final:\n");
@@ -380,7 +380,7 @@ public class MapaFrame extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, mensagem.toString(), "Ranking Final", JOptionPane.INFORMATION_MESSAGE);
-        System.exit(0); // Fecha o jogo após o ranking final
+        System.exit(0); 
     }
 
 

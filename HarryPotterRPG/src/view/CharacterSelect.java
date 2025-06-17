@@ -30,14 +30,14 @@ public class CharacterSelect extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 768, 632);
 
-        // Carrega imagem de fundo
+  
         ImageIcon fundoIcon = new ImageIcon("assets/Casas.png");
         fundoImagem = fundoIcon.getImage().getScaledInstance(768, 632, Image.SCALE_SMOOTH);
 
         contentPane = new JPanel(null);
         setContentPane(contentPane);
 
-        // Título
+        
         JLabel lblTitulo = new JLabel("Escolha sua casa:");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitulo.setForeground(Color.WHITE);
@@ -45,13 +45,13 @@ public class CharacterSelect extends JFrame {
         lblTitulo.setBounds(254, 5, 209, 28);
         contentPane.add(lblTitulo);
 
-        // Botões das casas
+        
         adicionarBotaoCasa("GRIFINÓRIA", "grifinoria.png", 500, 60);
         adicionarBotaoCasa("SONSERINA", "sonserina.png", 500, 350);
         adicionarBotaoCasa("CORVINAL", "corvinal.png", 86, 350);
         adicionarBotaoCasa("LUFA-LUFA", "lufalufa.png", 86, 60);
 
-        // Botão Voltar
+        
         JButton btnVoltar = new JButton("Voltar");
         btnVoltar.setBounds(10, 13, 85, 21);
         btnVoltar.addActionListener(e -> {
@@ -61,7 +61,7 @@ public class CharacterSelect extends JFrame {
         });
         contentPane.add(btnVoltar);
 
-        // Fundo como JLabel
+        
         backgroundLabel = new JLabel(new ImageIcon(fundoImagem));
         backgroundLabel.setBounds(0, 0, 768, 632);
         contentPane.add(backgroundLabel);
@@ -92,13 +92,13 @@ public class CharacterSelect extends JFrame {
 
         jogadoresSelecionados++;
         casasSelecionadas.add(casaEscolhida);
-        btn.setEnabled(false); // Desativa o botão da casa
+        btn.setEnabled(false); 
 
         System.out.println("Casa escolhida: " + casaEscolhida);
 
         if (jogadoresSelecionados >= numeroDeJogadores) {
             abrirMapa();
-            dispose(); // Fecha essa tela
+            dispose(); 
         }
     }
 

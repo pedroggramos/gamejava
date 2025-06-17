@@ -1,11 +1,11 @@
 package view;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import dominio.Pergunta;
-
 import java.util.function.Consumer;
 
 public class PerguntaFrame extends JFrame {
@@ -15,8 +15,8 @@ public class PerguntaFrame extends JFrame {
 
     public PerguntaFrame(Pergunta pergunta, Consumer<Boolean> callback) {
         setTitle("Pergunta");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 500, 240);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setBounds(100, 100, 500, 256);
         setResizable(false);
 
         contentPane = new JPanel();
@@ -73,6 +73,25 @@ public class PerguntaFrame extends JFrame {
 
             dispose();
             callback.accept(acertou);
+        });
+
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(
+                    PerguntaFrame.this,
+                    "Tem certeza que deseja fechar? Você perderá a vez!",
+                    "Atenção!",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+
+                if (result == JOptionPane.YES_OPTION) {
+                    callback.accept(false); 
+                    dispose();
+                }
+            }
         });
     }
 }
