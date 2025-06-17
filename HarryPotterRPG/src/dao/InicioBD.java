@@ -11,8 +11,8 @@ public class InicioBD {
 	private static final String URL2 = "jdbc:mysql://localhost:3306/game";
 	
 	public InicioBD() {
-		String sql1 = "CREATE DATABASE IF NOT EXISTSgame";
-		String sql2 = "CREATE TABLE IF NOT EXISTS perguntas(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, pergunta VARCHAR(300), alt_a VARCHAR(10), alt_b VARCHAR(10), alt_c VARCHAR(10), alt_d VARCHAR(10), resposta_correta VARCHAR(1))";
+		String sql1 = "CREATE DATABASE IF NOT EXISTS game";
+		String sql2 = "CREATE TABLE IF NOT EXISTS perguntas(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, pergunta VARCHAR(300), alt_a VARCHAR(200), alt_b VARCHAR(200), alt_c VARCHAR(200), alt_d VARCHAR(200), resposta_correta VARCHAR(1))";
 		
 		try {
 			Connection conexao = DriverManager.getConnection(URL1, "root", "");

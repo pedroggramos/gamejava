@@ -30,6 +30,11 @@ public class MainMenu extends JFrame {
 		fundoImagemMenu = fundoIcon.getImage().getScaledInstance(782, 782, Image.SCALE_SMOOTH);
 
 		contentPane = new JPanel(null) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -40,6 +45,11 @@ public class MainMenu extends JFrame {
 		contentPane.setLayout(null);
 
 		JLabel lblTituloMenu = new JLabel("HARRY POTTER - RPG") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void paintComponent(Graphics g) {
 				// sombra preta translúcida

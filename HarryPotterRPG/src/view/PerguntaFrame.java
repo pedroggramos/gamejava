@@ -32,10 +32,10 @@ public class PerguntaFrame extends JFrame {
         JRadioButton opcaoC = new JRadioButton("C) " + pergunta.getAlt_c());
         JRadioButton opcaoD = new JRadioButton("D) " + pergunta.getAlt_d());
 
-        opcaoA.setBounds(10, 60, 460, 21);
-        opcaoB.setBounds(10, 90, 460, 21);
-        opcaoC.setBounds(10, 120, 460, 21);
-        opcaoD.setBounds(10, 150, 460, 21);
+        opcaoA.setBounds(10, 60, 534, 21);
+        opcaoB.setBounds(10, 90, 534, 21);
+        opcaoC.setBounds(10, 120, 534, 21);
+        opcaoD.setBounds(10, 150, 534, 21);
 
         contentPane.add(opcaoA);
         contentPane.add(opcaoB);
