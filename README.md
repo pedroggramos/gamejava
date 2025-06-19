@@ -2,7 +2,7 @@
 📘 Trabalho de Programação de Computadores III
 📅 Entrega: 17 de junho de 2025
 
-👨‍💻 Desenvolvedores:
+👨‍💻 Desenvolvedor:
 - Pedro Gabriel Guimarães Ramos
  
 ---
